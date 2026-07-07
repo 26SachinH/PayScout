@@ -1,6 +1,12 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
+
+class FraudReport(BaseModel):
+    phone: str
+    fraud_type: str
+    description: str
 
 @app.get("/health")
 def health_deck():
@@ -15,9 +21,9 @@ def check_number(phone:str):
     }
 
 @app.post("/report")
-def report_found(phone:str, fraud_type:str, description:str):
+def report_fraud(report: FraudReport):
     return{
         "message" : "report received",
-        "phone" : phone,
-        "fraud_type" : fraud_type
+        "phone" : report.phone,
+        "fraud_type" : report.fraud_type
     }
